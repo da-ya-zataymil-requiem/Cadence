@@ -1,0 +1,49 @@
+# ---- Dependencies / build output ----
+node_modules/
+dist/
+dist-electron/
+release/
+build/
+out/
+*.tsbuildinfo
+
+# ---- Secrets / account data / local config ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.keystore
+secrets/
+credentials/
+config/local.*
+**/soundcloud-token*
+**/discord-token*
+*.db
+*.sqlite
+*.sqlite3
+backups/
+
+# ---- Tests (not published to this repo) ----
+tests/
+__tests__/
+**/*.test.*
+**/*.spec.*
+coverage/
+
+# ---- OS / editor cruft ----
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.log
+npm-debug.log*
+
+# ---- Electron-builder installer output (published to Releases, not the repo) ----
+*.exe
+*.dmg
+*.AppImage
+*.blockmap

@@ -1,0 +1,44 @@
+name: Build and publish installer
+
+# Triggered by pushing a version tag, e.g.:
+#   git tag v0.1.0 && git push origin v0.1.0
+# Builds the Windows installer and uploads it to a GitHub Release named
+# Cadence_{YY}_{MM}_{version}.exe (e.g. Cadence_25_09_0.1.0.exe).
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compute installer name
+        id: vars
+        shell: bash
+        run: |
+          YY=$(date +%y)
+          MM=$(date +%m)
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "artifact=Cadence_${YY}_${MM}_${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and publish
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx electron-builder --win nsis --publish always \
+            --config.artifactName="${{ steps.vars.outputs.artifact }}.\${ext}"
